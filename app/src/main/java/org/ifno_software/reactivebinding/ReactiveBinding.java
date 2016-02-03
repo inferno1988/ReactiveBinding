@@ -20,18 +20,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.ifno_software.reactivebinding.annotations.RxGetProperty;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.ifno_software.reactivebinding.parser.ReactiveExpressionsBaseListener;
+import org.ifno_software.reactivebinding.parser.ReactiveExpressionsLexer;
+import org.ifno_software.reactivebinding.parser.ReactiveExpressionsListenerImpl;
+import org.ifno_software.reactivebinding.parser.ReactiveExpressionsParser;
 
 import rx.Observable;
+import rx.observables.ConnectableObservable;
 
 /**
  * Created by atom on 2/2/16.
  */
 public class ReactiveBinding {
-    public static void bind(ViewGroup viewGroup, Observable.OnSubscribe<PropertyChangedEvent> viewModel) {
+    public static void bind(ViewGroup viewGroup, NotifyPropertyChanged viewModel) {
+        final Observable<PropertyChangedEvent> connectableObservable = viewModel.toObservable();
         final int childCount = viewGroup.getChildCount();
 
         for (int i = 0; i < childCount; i++) {
@@ -44,41 +49,20 @@ public class ReactiveBinding {
 
     }
 
-    private static void enrichView(View child, Observable.OnSubscribe<PropertyChangedEvent> viewModel) {
+    private static void enrichView(View child, NotifyPropertyChanged viewModel) {
         final Class<? extends View> childClass = child.getClass();
         if (TextView.class.isAssignableFrom(childClass)) {
             final TextView textView = (TextView) child;
             final String text = textView.getText().toString();
-            if (text.startsWith("{") && text.endsWith("}")) {
-                final String[] split = text.replaceAll("\\{|\\}", "").split("\\s");
-                getTextFromViewModelAndSetToView(viewModel, textView, split[1]);
 
-                Observable.create(viewModel)
-                        .ofType(PropertyChangedEvent.class)
-                        .filter(event -> event.getPropertyName().equals(split[1]))
-                        .subscribe((event) -> {
-                            getTextFromViewModelAndSetToView(viewModel, textView, split[1]);
-                        });
-            }
-
+            final ANTLRInputStream antlrInputStream = new ANTLRInputStream(text);
+            ReactiveExpressionsLexer lexer = new ReactiveExpressionsLexer(antlrInputStream);
+            final CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
+            ReactiveExpressionsParser parser = new ReactiveExpressionsParser(commonTokenStream);
+            ParseTreeWalker parseTreeWalker = new ParseTreeWalker();
+            parseTreeWalker.walk(new ReactiveExpressionsListenerImpl(viewModel, textView), parser.evaluatoinUnit());
         }
     }
 
-    private static void getTextFromViewModelAndSetToView(Object viewModel, TextView textView, String propertyName) {
-        final Method[] methods = viewModel.getClass().getMethods();
-        for (Method method : methods) {
-            if (method.isAnnotationPresent(RxGetProperty.class)) {
-                final RxGetProperty annotation = method.getAnnotation(RxGetProperty.class);
-                if (annotation.value().equals(propertyName)) {
-                    try {
-                        textView.setText(method.invoke(viewModel).toString());
-                    } catch (IllegalAccessException e) {
-                        textView.setText(e.getMessage());
-                    } catch (InvocationTargetException e) {
-                        textView.setText(e.getMessage());
-                    }
-                }
-            }
-        }
-    }
+
 }

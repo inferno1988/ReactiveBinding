@@ -23,6 +23,7 @@ import rx.Observable;
 /**
  * Created by atom on 2/2/16.
  */
-public interface NotifyPropertyChanged extends Observable.OnSubscribe<PropertyChangedEvent> {
+public interface NotifyPropertyChanged {
     void onPropertyChanged(String name);
+    Observable<PropertyChangedEvent> toObservable();
 }

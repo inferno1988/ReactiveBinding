@@ -50,4 +50,5 @@ dependencies {
     //RxJava dependencies
     compile 'io.reactivex:rxandroid:1.1.0'
     compile 'io.reactivex:rxjava:1.1.0'
+    compile 'org.antlr:antlr4-runtime:4.5.1'
 }

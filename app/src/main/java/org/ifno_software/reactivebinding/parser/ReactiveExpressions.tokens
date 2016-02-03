@@ -1,0 +1,10 @@
+OPEN=1
+CLOSE=2
+SUBSCRIBE=3
+COMMAND=4
+Identifier=5
+WS=6
+'{'=1
+'}'=2
+'subscribe'=3
+'command'=4

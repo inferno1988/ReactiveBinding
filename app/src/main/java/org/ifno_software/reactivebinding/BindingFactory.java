@@ -128,8 +128,7 @@ public class BindingFactory implements LayoutInflater.Factory2 {
                 e.printStackTrace();
             }
         }
-        if (view != null)
-            view.setBackgroundColor(Color.parseColor("#00FF00"));
+
         return view;
     }
 

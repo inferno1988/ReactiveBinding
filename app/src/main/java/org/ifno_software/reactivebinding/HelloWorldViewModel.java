@@ -20,6 +20,8 @@ import org.ifno_software.reactivebinding.annotations.RxGetProperty;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.observables.ConnectableObservable;
+import rx.observers.SafeSubscriber;
 
 /**
  * Created by atom on 2/2/16.
@@ -27,6 +29,7 @@ import rx.Subscriber;
 public class HelloWorldViewModel implements NotifyPropertyChanged {
     private String greeting = "Hello world";
     private Subscriber<? super PropertyChangedEvent> subscriber;
+    private ConnectableObservable<PropertyChangedEvent> observable;
 
     @RxGetProperty("helloWorld")
     public String getGreeting() {
@@ -39,14 +42,20 @@ public class HelloWorldViewModel implements NotifyPropertyChanged {
     }
 
     @Override
-    public void call(Subscriber<? super PropertyChangedEvent> subscriber) {
-        this.subscriber = subscriber;
-    }
-
-    @Override
     public void onPropertyChanged(String name) {
         if (subscriber != null) {
             subscriber.onNext(new PropertyChangedEvent(name));
         }
+    }
+
+    @Override
+    public Observable<PropertyChangedEvent> toObservable() {
+        if (observable == null) {
+            observable = Observable.<PropertyChangedEvent>create(subscriber1 -> this.subscriber = subscriber1)
+                    .publish();
+            observable.connect();
+        }
+
+        return observable;
     }
 }
