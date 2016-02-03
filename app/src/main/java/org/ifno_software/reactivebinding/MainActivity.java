@@ -34,21 +34,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final ViewGroup rootView = (ViewGroup) getWindow().getDecorView().findViewById(android.R.id.content);
-        rootView.removeAllViews();
-        final LayoutInflater inflater = LayoutInflater.from(this).cloneInContext(this);
-        final LayoutInflater.Factory2 factory2 = inflater.getFactory2();
-        final LayoutInflater.Filter filter = inflater.getFilter();
-        LayoutInflater layoutInflater = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                .cloneInContext(this);
+        setContentView(R.layout.activity_main);
 
-        layoutInflater.setFactory2(new BindingFactory(factory2, layoutInflater, filter));
-        final View view = layoutInflater.inflate(R.layout.activity_main, rootView, false);
-
-        HelloWorldViewModel viewModel = new HelloWorldViewModel();
-        setContentView(view);
-
-        ReactiveBinding.bind((ViewGroup) view, viewModel);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -56,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                viewModel.setGreeting("Greeting from fab");
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }

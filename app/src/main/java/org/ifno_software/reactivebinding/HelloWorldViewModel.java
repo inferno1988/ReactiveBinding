@@ -36,6 +36,11 @@ public class HelloWorldViewModel implements NotifyPropertyChanged {
         return greeting;
     }
 
+    @RxGetProperty("progress")
+    public Integer getProgress() {
+        return 50;
+    }
+
     public void setGreeting(String greeting) {
         this.greeting = greeting;
         onPropertyChanged("helloWorld");

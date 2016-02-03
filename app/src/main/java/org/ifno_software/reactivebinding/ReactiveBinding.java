@@ -16,53 +16,26 @@
 
 package org.ifno_software.reactivebinding;
 
+import android.content.Context;
+import android.support.annotation.LayoutRes;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.ifno_software.reactivebinding.parser.ReactiveExpressionsBaseListener;
-import org.ifno_software.reactivebinding.parser.ReactiveExpressionsLexer;
-import org.ifno_software.reactivebinding.parser.ReactiveExpressionsListenerImpl;
-import org.ifno_software.reactivebinding.parser.ReactiveExpressionsParser;
-
-import rx.Observable;
-import rx.observables.ConnectableObservable;
+import android.view.Window;
 
 /**
  * Created by atom on 2/2/16.
  */
 public class ReactiveBinding {
-    public static void bind(ViewGroup viewGroup, NotifyPropertyChanged viewModel) {
-        final Observable<PropertyChangedEvent> connectableObservable = viewModel.toObservable();
-        final int childCount = viewGroup.getChildCount();
 
-        for (int i = 0; i < childCount; i++) {
-            final View child = viewGroup.getChildAt(i);
-            enrichView(child, viewModel);
+    public static View bind(Context context, ViewGroup rootView, @LayoutRes int layoutId, NotifyPropertyChanged viewModel) {
+        final LayoutInflater baseInflater = LayoutInflater.from(context);
+        final LayoutInflater inflater = baseInflater.cloneInContext(context);
 
-            if (child instanceof ViewGroup)
-                bind((ViewGroup) child, viewModel);
-        }
+        final BindingFactory factory2 = new BindingFactory(baseInflater, viewModel);
 
+        inflater.setFactory2(factory2);
+
+        return inflater.inflate(layoutId, rootView, false);
     }
-
-    private static void enrichView(View child, NotifyPropertyChanged viewModel) {
-        final Class<? extends View> childClass = child.getClass();
-        if (TextView.class.isAssignableFrom(childClass)) {
-            final TextView textView = (TextView) child;
-            final String text = textView.getText().toString();
-
-            final ANTLRInputStream antlrInputStream = new ANTLRInputStream(text);
-            ReactiveExpressionsLexer lexer = new ReactiveExpressionsLexer(antlrInputStream);
-            final CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
-            ReactiveExpressionsParser parser = new ReactiveExpressionsParser(commonTokenStream);
-            ParseTreeWalker parseTreeWalker = new ParseTreeWalker();
-            parseTreeWalker.walk(new ReactiveExpressionsListenerImpl(viewModel, textView), parser.evaluatoinUnit());
-        }
-    }
-
-
 }

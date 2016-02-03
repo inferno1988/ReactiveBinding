@@ -24,9 +24,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewStub;
 
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.ifno_software.reactivebinding.annotations.RxGetProperty;
+import org.ifno_software.reactivebinding.parser.ReactiveExpressionsLexer;
+import org.ifno_software.reactivebinding.parser.ReactiveExpressionsListenerImpl;
+import org.ifno_software.reactivebinding.parser.ReactiveExpressionsParser;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Observable;
 
 /**
  * Created by atom on 2/2/16.
@@ -36,16 +46,16 @@ public class BindingFactory implements LayoutInflater.Factory2 {
     private final LayoutInflater.Factory2 factory2;
     private final LayoutInflater layoutInflater;
     private final LayoutInflater.Filter filter;
+    private final NotifyPropertyChanged viewModel;
 
     private HashMap<String, Boolean> mFilterMap = null;
     private final Object[] mConstructorArgs = new Object[2];
 
-    public BindingFactory(LayoutInflater.Factory2 factory2,
-                          LayoutInflater layoutInflater, LayoutInflater.Filter filter) {
-
-        this.factory2 = factory2;
+    public BindingFactory(LayoutInflater layoutInflater, NotifyPropertyChanged viewModel) {
+        this.viewModel = viewModel;
+        this.factory2 = layoutInflater.getFactory2();
         this.layoutInflater = layoutInflater;
-        this.filter = filter;
+        this.filter = layoutInflater.getFilter();
     }
 
     private final HashMap<String, Constructor<? extends View>> sConstructorMap =
@@ -129,7 +139,25 @@ public class BindingFactory implements LayoutInflater.Factory2 {
             }
         }
 
+        bindView(view, attrs, viewModel);
+
         return view;
+    }
+
+    private void bindView(View view, AttributeSet attrs, NotifyPropertyChanged viewModel) {
+        for (int i = 0; i < attrs.getAttributeCount(); i++) {
+            final String attributeValue = attrs.getAttributeValue(i);
+            final String attributeName = attrs.getAttributeName(i);
+            if (attributeValue.startsWith("{") && attributeValue.endsWith("}")) {
+
+                final ANTLRInputStream antlrInputStream = new ANTLRInputStream(attributeValue);
+                ReactiveExpressionsLexer lexer = new ReactiveExpressionsLexer(antlrInputStream);
+                final CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
+                ReactiveExpressionsParser parser = new ReactiveExpressionsParser(commonTokenStream);
+                ParseTreeWalker parseTreeWalker = new ParseTreeWalker();
+                parseTreeWalker.walk(new ReactiveExpressionsListenerImpl(viewModel, view, attributeName), parser.evaluatoinUnit());
+            }
+        }
     }
 
     private Class<? extends View> tryGetClassForNameWithPrefix(String name, Context context, String viewPrefix) {

@@ -43,15 +43,9 @@ public class MainActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final LayoutInflater.Factory2 factory2 = inflater.getFactory2();
-        final LayoutInflater.Filter filter = inflater.getFilter();
-        LayoutInflater layoutInflater = ((LayoutInflater) getContext()
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                .cloneInContext(getActivity());
+        HelloWorldViewModel viewModel = new HelloWorldViewModel();
 
-        layoutInflater.setFactory2(new BindingFactory(factory2, layoutInflater, filter));
-
-        return layoutInflater.inflate(R.layout.fragment_main, container, false);
+        return ReactiveBinding.bind(getActivity(), container, R.layout.fragment_main, viewModel);
     }
 
 

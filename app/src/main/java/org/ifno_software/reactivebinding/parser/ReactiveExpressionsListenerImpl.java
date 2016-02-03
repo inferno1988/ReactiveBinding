@@ -26,54 +26,66 @@ import org.ifno_software.reactivebinding.annotations.RxGetProperty;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import rx.Observable;
-
 /**
  * Created by atom on 2/3/16.
  */
 public class ReactiveExpressionsListenerImpl extends ReactiveExpressionsBaseListener {
     private NotifyPropertyChanged viewModel;
     private final View view;
+    private final String attributeName;
 
-    public ReactiveExpressionsListenerImpl(NotifyPropertyChanged viewModel, View view) {
+    public ReactiveExpressionsListenerImpl(NotifyPropertyChanged viewModel, View view, String attributeName) {
         this.viewModel = viewModel;
         this.view = view;
+        this.attributeName = attributeName;
     }
 
     @Override
     public void exitEvaluatoinUnit(ReactiveExpressionsParser.EvaluatoinUnitContext ctx) {
         if (ctx.action().SUBSCRIBE() != null) {
             final String propertyName = ctx.Identifier().getText();
-            getTextFromViewModelAndSetToView(viewModel, (TextView) view, propertyName);
+            getValueFromViewModelAndSetToView(viewModel, view, propertyName, attributeName);
 
             viewModel.toObservable()
                     .ofType(PropertyChangedEvent.class)
                     .filter(event -> event.getPropertyName().equals(propertyName))
                     .subscribe((event) -> {
-                        getTextFromViewModelAndSetToView(viewModel, (TextView) view, propertyName);
+                        getValueFromViewModelAndSetToView(viewModel, view, propertyName, attributeName);
                     });
         }
     }
 
-    private static void getTextFromViewModelAndSetToView(Object viewModel, TextView textView, String propertyName) {
+    private static void getValueFromViewModelAndSetToView(Object viewModel, View view, String propertyName, String attributeName) {
         Class<?> declaringClass = viewModel.getClass().getDeclaringClass();
         if (declaringClass == null)
             declaringClass = viewModel.getClass();
 
         final Method[] methods = declaringClass.getMethods();
-        for (Method method : methods) {
-            if (method.isAnnotationPresent(RxGetProperty.class)) {
-                final RxGetProperty annotation = method.getAnnotation(RxGetProperty.class);
+        for (Method viewModelMethod : methods) {
+            if (viewModelMethod.isAnnotationPresent(RxGetProperty.class)) {
+                final RxGetProperty annotation = viewModelMethod.getAnnotation(RxGetProperty.class);
                 if (annotation.value().equals(propertyName)) {
                     try {
-                        textView.setText(method.invoke(viewModel).toString());
-                    } catch (IllegalAccessException e) {
-                        textView.setText(e.getMessage());
+                        final String valueFromViewModel = viewModelMethod.invoke(viewModel).toString();
+                        for (Method viewMethod : view.getClass().getMethods()) {
+                            final String setterName = "set" + capitalize(attributeName);
+                            final Class<?>[] viewMethodParameterTypes = viewMethod.getParameterTypes();
+                            if (setterName.equals(viewMethod.getName()) && viewMethodParameterTypes.length == 1 && Object.class.isAssignableFrom(viewMethodParameterTypes[0])) {
+                                viewMethod.invoke(view, valueFromViewModel);
+                            }
+                        }
+
                     } catch (InvocationTargetException e) {
-                        textView.setText(e.getMessage());
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
                     }
                 }
             }
         }
+    }
+
+    private static String capitalize(final String line) {
+        return Character.toUpperCase(line.charAt(0)) + line.substring(1);
     }
 }
