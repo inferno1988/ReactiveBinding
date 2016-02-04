@@ -155,7 +155,7 @@ public class BindingFactory implements LayoutInflater.Factory2 {
                 final CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
                 ReactiveExpressionsParser parser = new ReactiveExpressionsParser(commonTokenStream);
                 ParseTreeWalker parseTreeWalker = new ParseTreeWalker();
-                parseTreeWalker.walk(new ReactiveExpressionsListenerImpl(viewModel, view, attributeName), parser.evaluatoinUnit());
+                parseTreeWalker.walk(new ReactiveExpressionsListenerImpl(viewModel, view, attributeName), parser.evaluationSequence());
             }
         }
     }

@@ -8,15 +8,25 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface ReactiveExpressionsListener extends ParseTreeListener {
 	/**
-	 * Enter a parse tree produced by {@link ReactiveExpressionsParser#evaluatoinUnit}.
+	 * Enter a parse tree produced by {@link ReactiveExpressionsParser#evaluationUnit}.
 	 * @param ctx the parse tree
 	 */
-	void enterEvaluatoinUnit(ReactiveExpressionsParser.EvaluatoinUnitContext ctx);
+	void enterEvaluationUnit(ReactiveExpressionsParser.EvaluationUnitContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link ReactiveExpressionsParser#evaluatoinUnit}.
+	 * Exit a parse tree produced by {@link ReactiveExpressionsParser#evaluationUnit}.
 	 * @param ctx the parse tree
 	 */
-	void exitEvaluatoinUnit(ReactiveExpressionsParser.EvaluatoinUnitContext ctx);
+	void exitEvaluationUnit(ReactiveExpressionsParser.EvaluationUnitContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ReactiveExpressionsParser#evaluationSequence}.
+	 * @param ctx the parse tree
+	 */
+	void enterEvaluationSequence(ReactiveExpressionsParser.EvaluationSequenceContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ReactiveExpressionsParser#evaluationSequence}.
+	 * @param ctx the parse tree
+	 */
+	void exitEvaluationSequence(ReactiveExpressionsParser.EvaluationSequenceContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ReactiveExpressionsParser#action}.
 	 * @param ctx the parse tree
@@ -27,4 +37,34 @@ public interface ReactiveExpressionsListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitAction(ReactiveExpressionsParser.ActionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ReactiveExpressionsParser#bindExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterBindExpression(ReactiveExpressionsParser.BindExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ReactiveExpressionsParser#bindExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitBindExpression(ReactiveExpressionsParser.BindExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ReactiveExpressionsParser#attrName}.
+	 * @param ctx the parse tree
+	 */
+	void enterAttrName(ReactiveExpressionsParser.AttrNameContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ReactiveExpressionsParser#attrName}.
+	 * @param ctx the parse tree
+	 */
+	void exitAttrName(ReactiveExpressionsParser.AttrNameContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ReactiveExpressionsParser#propertyName}.
+	 * @param ctx the parse tree
+	 */
+	void enterPropertyName(ReactiveExpressionsParser.PropertyNameContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ReactiveExpressionsParser#propertyName}.
+	 * @param ctx the parse tree
+	 */
+	void exitPropertyName(ReactiveExpressionsParser.PropertyNameContext ctx);
 }

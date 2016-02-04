@@ -19,8 +19,10 @@ package org.ifno_software.reactivebinding.parser;
 import android.view.View;
 import android.widget.TextView;
 
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.ifno_software.reactivebinding.NotifyPropertyChanged;
 import org.ifno_software.reactivebinding.PropertyChangedEvent;
+import org.ifno_software.reactivebinding.R;
 import org.ifno_software.reactivebinding.annotations.RxGetProperty;
 
 import java.lang.reflect.InvocationTargetException;
@@ -41,17 +43,35 @@ public class ReactiveExpressionsListenerImpl extends ReactiveExpressionsBaseList
     }
 
     @Override
-    public void exitEvaluatoinUnit(ReactiveExpressionsParser.EvaluatoinUnitContext ctx) {
+    public void exitEvaluationUnit(ReactiveExpressionsParser.EvaluationUnitContext ctx) {
         if (ctx.action().SUBSCRIBE() != null) {
-            final String propertyName = ctx.Identifier().getText();
-            getValueFromViewModelAndSetToView(viewModel, view, propertyName, attributeName);
 
-            viewModel.toObservable()
-                    .ofType(PropertyChangedEvent.class)
-                    .filter(event -> event.getPropertyName().equals(propertyName))
-                    .subscribe((event) -> {
-                        getValueFromViewModelAndSetToView(viewModel, view, propertyName, attributeName);
-                    });
+            final TerminalNode identifier = ctx.Identifier();
+            if (identifier != null) {
+                final String propertyName = identifier.getText();
+                getValueFromViewModelAndSetToView(viewModel, view, propertyName, attributeName);
+
+                viewModel.toObservable()
+                        .ofType(PropertyChangedEvent.class)
+                        .filter(event -> event.getPropertyName().equals(propertyName))
+                        .subscribe((event) -> {
+                            getValueFromViewModelAndSetToView(viewModel, view, propertyName, attributeName);
+                        });
+            }
+
+            final ReactiveExpressionsParser.BindExpressionContext bindExpressionContext = ctx.bindExpression();
+            if (bindExpressionContext != null) {
+                final String attrName = bindExpressionContext.attrName().getText();
+                final String propertyName = bindExpressionContext.propertyName().getText();
+                getValueFromViewModelAndSetToView(viewModel, view, propertyName, attrName);
+
+                viewModel.toObservable()
+                        .ofType(PropertyChangedEvent.class)
+                        .filter(event -> event.getPropertyName().equals(propertyName))
+                        .subscribe((event) -> {
+                            getValueFromViewModelAndSetToView(viewModel, view, propertyName, attrName);
+                        });
+            }
         }
     }
 
@@ -66,12 +86,21 @@ public class ReactiveExpressionsListenerImpl extends ReactiveExpressionsBaseList
                 final RxGetProperty annotation = viewModelMethod.getAnnotation(RxGetProperty.class);
                 if (annotation.value().equals(propertyName)) {
                     try {
-                        final String valueFromViewModel = viewModelMethod.invoke(viewModel).toString();
+                        final Object valueFromViewModel = viewModelMethod.invoke(viewModel);
                         for (Method viewMethod : view.getClass().getMethods()) {
                             final String setterName = "set" + capitalize(attributeName);
                             final Class<?>[] viewMethodParameterTypes = viewMethod.getParameterTypes();
-                            if (setterName.equals(viewMethod.getName()) && viewMethodParameterTypes.length == 1 && Object.class.isAssignableFrom(viewMethodParameterTypes[0])) {
-                                viewMethod.invoke(view, valueFromViewModel);
+
+                            if (setterName.equals(viewMethod.getName()) && viewMethodParameterTypes.length == 1) {
+                                if (viewMethodParameterTypes[0].isAssignableFrom(viewModelMethod.getReturnType())) {
+                                    viewMethod.invoke(view, valueFromViewModel);
+                                } else if (viewMethodParameterTypes[0].isPrimitive()) {
+                                    try {
+                                        viewMethod.invoke(view, valueFromViewModel);
+                                    } catch (IllegalArgumentException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
                             }
                         }
 

@@ -6,8 +6,12 @@
 
 grammar ReactiveExpressions;
 
-evaluatoinUnit
-         :      OPEN action Identifier CLOSE
+evaluationUnit
+         :      OPEN action (Identifier|bindExpression) CLOSE
+         ;
+
+evaluationSequence
+         :      evaluationUnit evaluationUnit?
          ;
 
 action
@@ -15,10 +19,21 @@ action
          |
            COMMAND;
 
+bindExpression
+		 :		attrName LINK propertyName
+		 ;
+
+attrName
+         :      Identifier;
+
+propertyName
+         :      Identifier;
+
 OPEN     : '{';
 CLOSE    : '}';
 SUBSCRIBE: 'subscribe';
 COMMAND	 : 'command';
+LINK	 : '->';
 
 Identifier
 	 :	JavaLetter JavaLetterOrDigit*

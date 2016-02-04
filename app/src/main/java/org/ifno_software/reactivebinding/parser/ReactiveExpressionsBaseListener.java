@@ -1,19 +1,9 @@
 // Generated from /home/atom/Projects/ReactiveBinding/app/grammar/ReactiveExpressions.g4 by ANTLR 4.5.1
 package org.ifno_software.reactivebinding.parser;
 
-import android.view.View;
-import android.widget.TextView;
-
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
-import org.ifno_software.reactivebinding.PropertyChangedEvent;
-import org.ifno_software.reactivebinding.annotations.RxGetProperty;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import rx.Observable;
 
 /**
  * This class provides an empty implementation of {@link ReactiveExpressionsListener},
@@ -21,34 +11,78 @@ import rx.Observable;
  * of the available methods.
  */
 public class ReactiveExpressionsBaseListener implements ReactiveExpressionsListener {
-
-
-
-
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterEvaluatoinUnit(ReactiveExpressionsParser.EvaluatoinUnitContext ctx) {
-
-	}
+	@Override public void enterEvaluationUnit(ReactiveExpressionsParser.EvaluationUnitContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitEvaluatoinUnit(ReactiveExpressionsParser.EvaluatoinUnitContext ctx) { }
-
-	@Override
-	public void enterAction(ReactiveExpressionsParser.ActionContext ctx) {
-
-	}
-
-	@Override
-	public void exitAction(ReactiveExpressionsParser.ActionContext ctx) {
-
-	}
+	@Override public void exitEvaluationUnit(ReactiveExpressionsParser.EvaluationUnitContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterEvaluationSequence(ReactiveExpressionsParser.EvaluationSequenceContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitEvaluationSequence(ReactiveExpressionsParser.EvaluationSequenceContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAction(ReactiveExpressionsParser.ActionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAction(ReactiveExpressionsParser.ActionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterBindExpression(ReactiveExpressionsParser.BindExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBindExpression(ReactiveExpressionsParser.BindExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAttrName(ReactiveExpressionsParser.AttrNameContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAttrName(ReactiveExpressionsParser.AttrNameContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPropertyName(ReactiveExpressionsParser.PropertyNameContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPropertyName(ReactiveExpressionsParser.PropertyNameContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
@@ -74,6 +108,4 @@ public class ReactiveExpressionsBaseListener implements ReactiveExpressionsListe
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void visitErrorNode(ErrorNode node) { }
-
-
 }
