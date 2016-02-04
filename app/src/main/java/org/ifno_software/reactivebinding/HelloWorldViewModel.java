@@ -30,6 +30,7 @@ public class HelloWorldViewModel implements NotifyPropertyChanged {
     private String greeting = "Hello world";
     private Subscriber<? super PropertyChangedEvent> subscriber;
     private ConnectableObservable<PropertyChangedEvent> observable;
+    private Integer progress = 30;
 
     @RxGetProperty("helloWorld")
     public String getGreeting() {
@@ -38,7 +39,12 @@ public class HelloWorldViewModel implements NotifyPropertyChanged {
 
     @RxGetProperty("progress")
     public Integer getProgress() {
-        return 50;
+        return progress;
+    }
+
+    public void setProgress(Integer progress) {
+        this.progress = progress;
+        onPropertyChanged("progress");
     }
 
     public void setGreeting(String greeting) {

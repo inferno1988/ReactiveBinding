@@ -30,6 +30,7 @@ import android.widget.RelativeLayout;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -37,16 +38,39 @@ import java.util.HashMap;
  */
 public class MainActivityFragment extends Fragment {
 
+    private HelloWorldViewModel viewModel;
+
     public MainActivityFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        HelloWorldViewModel viewModel = new HelloWorldViewModel();
+        viewModel = new HelloWorldViewModel();
 
         return ReactiveBinding.bind(getActivity(), container, R.layout.fragment_main, viewModel);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
 
+        final Runnable updateTime = new Runnable() {
+            @Override
+            public void run() {
+                viewModel.setGreeting(new Date().toString());
+                getView().postDelayed(this, 1000);
+            }
+        };
+        getView().post(updateTime);
+
+        final Runnable updateProgress = new Runnable() {
+            @Override
+            public void run() {
+                viewModel.setProgress(viewModel.getProgress() + 1);
+                getView().postDelayed(this, 1000);
+            }
+        };
+        getView().post(updateProgress);
+    }
 }

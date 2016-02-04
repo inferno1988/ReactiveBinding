@@ -146,8 +146,8 @@ public class BindingFactory implements LayoutInflater.Factory2 {
 
     private void bindView(View view, AttributeSet attrs, NotifyPropertyChanged viewModel) {
         for (int i = 0; i < attrs.getAttributeCount(); i++) {
-            final String attributeValue = attrs.getAttributeValue(i);
-            final String attributeName = attrs.getAttributeName(i);
+            final String attributeValue = attrs.getAttributeValue(i).trim();
+            final String attributeName = attrs.getAttributeName(i).trim();
             if (attributeValue.startsWith("{") && attributeValue.endsWith("}")) {
 
                 final ANTLRInputStream antlrInputStream = new ANTLRInputStream(attributeValue);
