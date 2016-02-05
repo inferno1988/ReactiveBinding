@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package org.ifno_software.reactivebinding.annotations;
+package org.ifno_software.rxbinding;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import android.app.Application;
+import android.test.ApplicationTestCase;
 
 /**
- * Created by atom on 2/2/16.
+ * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface RxGetProperty {
-    String value();
+public class ApplicationTest extends ApplicationTestCase<Application> {
+    public ApplicationTest() {
+        super(Application.class);
+    }
 }

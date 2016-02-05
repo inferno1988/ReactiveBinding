@@ -16,12 +16,13 @@
 
 package org.ifno_software.reactivebinding;
 
-import org.ifno_software.reactivebinding.annotations.RxGetProperty;
+import org.ifno_software.rxbinding.NotifyPropertyChanged;
+import org.ifno_software.rxbinding.PropertyChangedEvent;
+import org.ifno_software.rxbinding.annotations.RxGetProperty;
 
 import rx.Observable;
 import rx.Subscriber;
 import rx.observables.ConnectableObservable;
-import rx.observers.SafeSubscriber;
 
 /**
  * Created by atom on 2/2/16.

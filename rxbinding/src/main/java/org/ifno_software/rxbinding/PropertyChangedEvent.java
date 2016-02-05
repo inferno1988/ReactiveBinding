@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
-package org.ifno_software.reactivebinding;
-
-import java.util.Objects;
-
-import rx.Observable;
+package org.ifno_software.rxbinding;
 
 /**
  * Created by atom on 2/2/16.
  */
-public interface NotifyPropertyChanged {
-    void onPropertyChanged(String name);
-    Observable<PropertyChangedEvent> toObservable();
+public class PropertyChangedEvent {
+    private final String propertyName;
+
+    public PropertyChangedEvent(String propertyName) {
+        this.propertyName = propertyName;
+    }
+
+    public String getPropertyName() {
+        return propertyName;
+    }
 }

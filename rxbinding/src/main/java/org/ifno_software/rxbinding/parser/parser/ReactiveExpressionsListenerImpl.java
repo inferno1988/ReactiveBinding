@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package org.ifno_software.reactivebinding.parser;
+package org.ifno_software.rxbinding.parser.parser;
 
 import android.view.View;
-import android.widget.TextView;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
-import org.ifno_software.reactivebinding.NotifyPropertyChanged;
-import org.ifno_software.reactivebinding.PropertyChangedEvent;
-import org.ifno_software.reactivebinding.R;
-import org.ifno_software.reactivebinding.annotations.RxGetProperty;
+import org.ifno_software.rxbinding.NotifyPropertyChanged;
+import org.ifno_software.rxbinding.PropertyChangedEvent;
+import org.ifno_software.rxbinding.annotations.RxGetProperty;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

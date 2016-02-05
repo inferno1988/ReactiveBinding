@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package org.ifno_software.reactivebinding;
+package org.ifno_software.rxbinding;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 
 /**
  * Created by atom on 2/2/16.

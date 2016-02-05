@@ -16,22 +16,15 @@
 
 package org.ifno_software.reactivebinding;
 
-import android.content.Context;
-import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.util.AttributeSet;
-import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
-import android.widget.RelativeLayout;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import org.ifno_software.rxbinding.ReactiveBinding;
+
 import java.util.Date;
-import java.util.HashMap;
 
 /**
  * A placeholder fragment containing a simple view.

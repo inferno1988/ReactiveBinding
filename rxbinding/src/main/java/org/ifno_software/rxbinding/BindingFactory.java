@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.ifno_software.reactivebinding;
+package org.ifno_software.rxbinding;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -27,16 +27,13 @@ import android.view.ViewStub;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.ifno_software.reactivebinding.annotations.RxGetProperty;
-import org.ifno_software.reactivebinding.parser.ReactiveExpressionsLexer;
-import org.ifno_software.reactivebinding.parser.ReactiveExpressionsListenerImpl;
-import org.ifno_software.reactivebinding.parser.ReactiveExpressionsParser;
+import org.ifno_software.rxbinding.parser.parser.ReactiveExpressionsLexer;
+import org.ifno_software.rxbinding.parser.parser.ReactiveExpressionsListenerImpl;
+import org.ifno_software.rxbinding.parser.parser.ReactiveExpressionsParser;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.Observable;
 
 /**
  * Created by atom on 2/2/16.
